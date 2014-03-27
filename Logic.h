@@ -10,7 +10,9 @@
 
 @interface Logic : NSObject
 
+@property (nonatomic) int highestHousesCount;
 @property (nonatomic, strong) NSMutableArray *arrayOfHousesPlaced;
+@property (nonatomic, strong) NSMutableArray *arrayOfBestValues;
 -(void) setup;
 
 @end

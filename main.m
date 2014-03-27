@@ -16,26 +16,10 @@ int main(int argc, const char * argv[])
 	    
 	    // Run program x times
 		Logic *myLogic = [[Logic alloc]init];
-		for (int i = 0; i < 500000; i++) {
+		for (int i = 0; i < 50000000; i++) {
 			[myLogic setup];
 		}
-		
-		// Find highest value
-		int highestValue = 0;
-		for (NSNumber *currentNumber in [myLogic arrayOfHousesPlaced]){
-			if ([currentNumber intValue] > highestValue) {
-				highestValue = [currentNumber intValue];
-			}
-		}
-		
-		// Find mean
-		int sum = 0;
-		for (NSNumber *currentNumber in [myLogic arrayOfHousesPlaced]){
-			sum += [currentNumber intValue];
-		}
-		int mean = sum / [[myLogic arrayOfHousesPlaced] count];
-		
-		NSLog(@"\n\n Highest value = %d\n\nMean = %d", highestValue, mean);
+		NSLog(@"\nHighest Value = %d\nWith Set: %@", [myLogic highestHousesCount], [myLogic arrayOfBestValues]);
 	}
     return 0;
 }

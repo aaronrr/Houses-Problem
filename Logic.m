@@ -13,21 +13,17 @@
 
 -(void)setup
 {
-	int housesCount = 1;
-	NSNumber *numberLine = @100;
+	float housesCount = 1;
+	float numberLine = 1000;
 	NSMutableArray  *arrayOfPointsOccupied = [NSMutableArray new];
-	NSNumber *spaceForEachHouse = [NSNumber new];
+	float spaceForEachHouse = 0;
 	NSMutableSet *setOfOccupiedPlots = [NSMutableSet new];
 	NSArray *arrayOfObjectsInSet = [NSArray new];
 	
-	int inc = 0;
 	while (YES) {
-		inc++;
-		if (inc > 20) {
-			goto outer;
-		}
+
 		// Reset values
-		spaceForEachHouse = [NSNumber numberWithInt:[numberLine intValue] / housesCount];
+		spaceForEachHouse = numberLine / housesCount;
 		arrayOfObjectsInSet = [setOfOccupiedPlots allObjects];
 		for (NSNumber *currentObject in arrayOfObjectsInSet){
 			[setOfOccupiedPlots removeObject:currentObject];
@@ -37,20 +33,21 @@
 		// Check that no two houses occupy the same plot
 		for (NSNumber *houseNumber in arrayOfPointsOccupied) {
 			for (int i = 1; i <= housesCount; i++) {
-				if ([spaceForEachHouse intValue] * (i-1) < [houseNumber intValue] && [houseNumber intValue] < [spaceForEachHouse intValue] * i) {
-					if ([setOfOccupiedPlots containsObject:[NSNumber numberWithInt:i]]) {
+				if (spaceForEachHouse * (i-1) < [houseNumber intValue] && [houseNumber intValue] < spaceForEachHouse * i) {
+					if ([setOfOccupiedPlots containsObject:[NSNumber numberWithFloat:i]]) {
 						// Two houses in the same plot. Break out of all loops
 						goto outer;
 					}
-					[setOfOccupiedPlots addObject:[NSNumber numberWithInt:i]];
+					[setOfOccupiedPlots addObject:[NSNumber numberWithFloat:i]];
 				}
 			}
 		}
+
 		// Place a new house randomly in unoccupied plot
 		for (int i = 1; i <= housesCount; i++) {
-			if (![setOfOccupiedPlots member:[NSNumber numberWithInt:i]]) {
-				int minValueForHousePoint = [spaceForEachHouse intValue] * i-1;
-				int randomPlacement = arc4random_uniform([spaceForEachHouse intValue] + 1);
+			if (![setOfOccupiedPlots member:[NSNumber numberWithFloat:i]]) {
+				float minValueForHousePoint = (spaceForEachHouse * (i-1));
+				float randomPlacement = arc4random_uniform(spaceForEachHouse + 1);
 				NSNumber *pointToAddToLine = [NSNumber numberWithInt:minValueForHousePoint + randomPlacement];
 				[arrayOfPointsOccupied addObject:pointToAddToLine];
 			}
@@ -60,10 +57,14 @@
 		housesCount++;
 	}
 outer:;
-	if (!_arrayOfHousesPlaced){
-		_arrayOfHousesPlaced = [NSMutableArray new];
+	if (!_highestHousesCount) {
+		_highestHousesCount = 0;
 	}
-	[_arrayOfHousesPlaced addObject:[NSNumber numberWithInt:housesCount]];
-}
-
+	if (housesCount > _highestHousesCount){
+		_highestHousesCount = housesCount;
+		if (!_arrayOfBestValues) {
+			_arrayOfBestValues = [NSMutableArray new];
+		}
+		_arrayOfBestValues = arrayOfPointsOccupied;
+	}
 @end
